@@ -16,24 +16,30 @@ export function activate(context: vscode.ExtensionContext) {
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "branch-warnings" is now active!');
 
+    let protectedBranches = vscode.workspace.getConfiguration("branchwarnings").get<string[]>("protectedBranches");
+
     const gitpath = path.join(vscode.workspace.rootPath, ".git");
     const headpath = path.join(gitpath, "HEAD");
     const pattern = new vscode.RelativePattern(gitpath, "HEAD");
     const watcher = vscode.workspace.createFileSystemWatcher(pattern);
     watcher.onDidChange(e => {
-        updateBranch(status, e.fsPath);
+        updateBranch(status, e.fsPath, protectedBranches);
     });
-    updateBranch(status, headpath);
+    vscode.workspace.onDidChangeConfiguration(e => {
+        protectedBranches = vscode.workspace.getConfiguration("branchwarnings").get<string[]>("protectedBranches");
+        updateBranch(status, headpath, protectedBranches);
+    });
+    updateBranch(status, headpath, protectedBranches);
 }
 
 let lastBranch = "";
 
-function updateBranch(status: vscode.StatusBarItem, path: string): void {
+function updateBranch(status: vscode.StatusBarItem, path: string, protectedBranches: string[]): void {
     fs.readFile(path, "utf-8", (err, data) => {
         if (!err) {
             const line = data.split(/\r\n|\r|\n/)[0];
             const branch = line.split("/").pop();
-            if (branch.toLowerCase() === "master") {
+            if (protectedBranches.some(val => val.toLowerCase() === branch.toLowerCase())) {
                 status.text = "WARNING: branch is " + branch;
                 status.show();
                 if (lastBranch != branch) {

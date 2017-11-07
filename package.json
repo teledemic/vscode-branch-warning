@@ -15,7 +15,17 @@
   ],
   "main": "./out/extension",
   "contributes": {
-    "commands": [
+    "configuration": [
+      {
+        "title": "Branch Warnings configuration",
+        "properties": {
+          "branchwarnings.protectedBranches": {
+            "type": "array",
+            "default": [],
+            "description": "Array of names of protected branches"
+          }
+        }
+      }
     ]
   },
   "scripts": {
