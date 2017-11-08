@@ -2,7 +2,7 @@
   "name": "branch-warnings",
   "displayName": "Git Branch Warnings",
   "description": "Warn when you're on the wrong Git branch, like MASTER",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "teledemic",
   "repository": {
     "type": "git",
