@@ -2,7 +2,7 @@
   "name": "branch-warnings",
   "displayName": "Git Branch Warnings",
   "description": "Warn when you're on the wrong Git branch, like MASTER",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "teledemic",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   "homepage": "https://github.com/teledemic/vscode-branch-warning/blob/master/README.md",
   "icon": "images/icon.png",
   "galleryBanner": {
-    "color": "#C80000",
+    "color": "#3f3f3f",
     "theme": "dark"
   },
   "engines": {
