@@ -14,9 +14,7 @@ This extension contributes the following settings:
 
 By default, no warnings will be given. If you wish to warn when working on the branch "master", add to your workspace or user settings:
 ```
-	"branchwarnings.protectedBranches": [
-		"master"
-	]
+"branchwarnings.protectedBranches": [ "master" ]
 ```
 
 ## Known issues
