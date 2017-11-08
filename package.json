@@ -1,9 +1,19 @@
 {
   "name": "branch-warnings",
-  "displayName": "Branch Warnings",
-  "description": "Warn when you're on the wrong branch, like MASTER",
-  "version": "0.0.2",
+  "displayName": "Git Branch Warnings",
+  "description": "Warn when you're on the wrong Git branch, like MASTER",
+  "version": "1.0.0",
   "publisher": "teledemic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teledemic/vscode-branch-warning.git"
+  },
+  "homepage": "https://github.com/teledemic/vscode-branch-warning/blob/master/README.md",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#C80000",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.17.0"
   },
@@ -11,7 +21,7 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:**/.gitignore"
+    "workspaceContains:.git"
   ],
   "main": "./out/extension",
   "contributes": {
@@ -19,10 +29,15 @@
       {
         "title": "Branch Warnings configuration",
         "properties": {
+          "branchwarnings.suppressPopup": {
+            "type": "boolean",
+            "default": false,
+            "description": "Suppress the more intrusive warning dialog when first switching to a protected branch (only show the warning on the status bar)."
+          },
           "branchwarnings.protectedBranches": {
             "type": "array",
             "default": [],
-            "description": "Array of names of protected branches"
+            "description": "Array of names of protected branches to show warnings for."
           }
         }
       }
