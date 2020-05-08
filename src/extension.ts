@@ -3,8 +3,10 @@ import * as vscode from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
 
+const GIT_IDENTIFIER = ".git/HEAD";
 let protectedBranches: string[] = [];
 let suppressPopup = false;
+let lastBranch = "";
 
 export function activate(context: vscode.ExtensionContext) {
     const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
@@ -17,9 +19,18 @@ export function activate(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration("branchwarnings");
     protectedBranches = config.get<string[]>("protectedBranches");
     suppressPopup = config.get<boolean>("suppressPopup");
-    
-    const gitpath = path.join(vscode.workspace.rootPath, ".git");
+
+    const gitpath = path.join(locateGitPath(vscode.workspace.rootPath), ".git");
     const headpath = path.join(gitpath, "HEAD");
+    
+        // Install the debugger
+    let disposable = vscode.commands.registerCommand('gitbranchwarm.debug', () => {
+		// Display a message box to the user
+        vscode.window.showInformationMessage('Found a .git folder at: ' + gitpath);
+	});
+	context.subscriptions.push(disposable);
+
+    
     const pattern = new vscode.RelativePattern(gitpath, "HEAD");
     const watcher = vscode.workspace.createFileSystemWatcher(pattern);
     watcher.onDidChange(e => {
@@ -34,7 +45,25 @@ export function activate(context: vscode.ExtensionContext) {
     updateBranch(status, headpath);
 }
 
-let lastBranch = "";
+function locateGitPath(startPath:string): string {
+    let dir = startPath;
+    while (!isValidGitPath(dir)) {
+        // If not valid try the parent
+        dir = path.join(dir, '../');
+    }
+    console.log('Found .git folder: ' + dir);
+    return dir;
+}
+
+function isValidGitPath(directory:string): boolean {
+    const headpath = path.join(directory, GIT_IDENTIFIER);
+    let isGitRoot = fs.existsSync(headpath);
+    if (!isGitRoot) {
+        console.log('Did not find .git folder in: ' + headpath);
+    }
+    return isGitRoot;
+}
+
 
 function updateBranch(status: vscode.StatusBarItem, path: string): void {
     fs.readFile(path, "utf-8", (err, data) => {
