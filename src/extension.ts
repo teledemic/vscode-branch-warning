@@ -11,14 +11,10 @@ let lastBranch = "";
 export function activate(context: vscode.ExtensionContext) {
     const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
     status.text = "WARNING";
-    status.color = "#f00";
-    status.tooltip = "This branch has been marked as protected in the branch-warnings extension";
 
     console.log("Extension branch-warnings initializing");
 
-    let config = vscode.workspace.getConfiguration("branchwarnings");
-    protectedBranches = config.get<string[]>("protectedBranches");
-    suppressPopup = config.get<boolean>("suppressPopup");
+    updateConfigs(status);
 
     const gitpath = path.join(locateGitPath(vscode.workspace.rootPath), ".git");
     const headpath = path.join(gitpath, "HEAD");
@@ -39,10 +35,18 @@ export function activate(context: vscode.ExtensionContext) {
     });
     vscode.workspace.onDidChangeConfiguration(e => {
         console.log("Configuration change detected");
-        protectedBranches = vscode.workspace.getConfiguration("branchwarnings").get<string[]>("protectedBranches");
+        updateConfigs(status);
         updateBranch(status, headpath);
     });
     updateBranch(status, headpath);
+}
+
+function updateConfigs(status:vscode.StatusBarItem) {
+    let config = vscode.workspace.getConfiguration("branchwarnings");
+    protectedBranches = config.get<string[]>("protectedBranches");
+    suppressPopup = config.get<boolean>("suppressPopup");
+    status.color = config.get<string>("msgColor");
+    status.tooltip = config.get<string>("msgTooltip");
 }
 
 function locateGitPath(startPath:string): string {

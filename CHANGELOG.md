@@ -12,3 +12,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 - Support for nested project structures, where the vscode workspace isn't at the git repository root. 
 - Changed the default properties to include "master" in the default protected branches. 
+- Added the ability to customize the warning tooltip and color. 

@@ -44,6 +44,16 @@
             "type": "array",
             "default": ["master"],
             "description": "Array of names of protected branches to show warnings for."
+          },
+          "branchwarnings.msgColor": {
+            "type": "string",
+            "default": "#f00",
+            "description": "Allows you to change the warning msg color."
+          },
+          "branchwarnings.msgTooltip": {
+            "type": "string",
+            "default": "This branch has been marked as protected in the branch-warnings extension",
+            "description": "Allows you to change the warning msg tooltip."
           }
         }
       }
