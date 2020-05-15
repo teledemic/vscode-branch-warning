@@ -27,7 +27,7 @@
   "contributes": {
     "commands": [
 			{
-				"command": "gitbranchwarm.debug",
+				"command": "gitbranchwarn.debug",
 				"title": "Git Branch Warn: Debug"
 			}
 		],
