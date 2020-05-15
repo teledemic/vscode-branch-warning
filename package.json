@@ -2,7 +2,7 @@
   "name": "branch-warnings",
   "displayName": "Git Branch Warnings",
   "description": "Warn when you're on the wrong Git branch, like MASTER",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "teledemic",
   "repository": {
     "type": "git",
@@ -25,6 +25,12 @@
   ],
   "main": "./out/extension",
   "contributes": {
+    "commands": [
+			{
+				"command": "gitbranchwarn.debug",
+				"title": "Git Branch Warn: Debug"
+			}
+		],
     "configuration": [
       {
         "title": "Branch Warnings configuration",
@@ -36,8 +42,18 @@
           },
           "branchwarnings.protectedBranches": {
             "type": "array",
-            "default": [],
+            "default": ["master"],
             "description": "Array of names of protected branches to show warnings for."
+          },
+          "branchwarnings.msgColor": {
+            "type": "string",
+            "default": "#f00",
+            "description": "Allows you to change the warning msg color."
+          },
+          "branchwarnings.msgTooltip": {
+            "type": "string",
+            "default": "This branch has been marked as protected in the branch-warnings extension",
+            "description": "Allows you to change the warning msg tooltip."
           }
         }
       }
