@@ -12,11 +12,9 @@ This extension contributes the following settings:
 
 * `branchwarnings.protectedBranches`: An array of branch names. If it exists, warnings will be shown for these names.
 
-By default, no warnings will be given. If you wish to warn when working on the branch "master", add to your workspace or user settings:
-```
-"branchwarnings.protectedBranches": [ "master" ]
-```
+* `branchwarnings.msgColor`: Allows you to change the color of the message on the status bar.
 
-## Known issues
-
-The VSCode git plugin handles workspaces in subfolders of git repositories. This extension does not, and will only activate if the workspace is the root of a git repo.
+By default, warnings will be given for branches titled "master". If you wish to warn when working on another branch such as "prerelease", add to your workspace or user settings:
+```
+"branchwarnings.protectedBranches": [ "master", "prerelease" ]
+```
