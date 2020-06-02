@@ -16,5 +16,5 @@ This extension contributes the following settings:
 
 By default, warnings will be given for branches titled "master". If you wish to warn when working on another branch such as "prerelease", add to your workspace or user settings:
 ```
-"branchwarnings.protectedBranches": [ "master", "prerelease" ]
+"branchwarnings.protectedBranches": [ "master", "prerelease", "releases/**" ]
 ```
