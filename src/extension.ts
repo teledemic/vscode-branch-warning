@@ -2,8 +2,10 @@
 import * as vscode from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
+import * as globToRegExp from "glob-to-regexp";
 
 const GIT_IDENTIFIER = ".git/HEAD";
+const BRANCH_PREFIX = "ref: refs/heads/";
 let protectedBranches: string[] = [];
 let suppressPopup = false;
 let lastBranch = "";
@@ -72,10 +74,18 @@ function isValidGitPath(directory:string): boolean {
 function updateBranch(status: vscode.StatusBarItem, path: string): void {
     fs.readFile(path, "utf-8", (err, data) => {
         if (!err) {
+            // Parse out the branch name, since we now need to consider the entire 
+            // branch path/name like "feature/xyz"
             const line = data.split(/\r\n|\r|\n/)[0];
-            const branch = line.split("/").pop();
+            const branch = line.replace(BRANCH_PREFIX, "");
             console.log("On branch " + branch);
-            if (protectedBranches.some(val => val.toLowerCase() === branch.toLowerCase())) {
+            if (protectedBranches.some(
+                    val => { 
+                        // Instead of doing a direct match, we now treat the values as globs
+                        let regex = globToRegExp(val, { flags: "i", globstar: true });
+                        return regex.test(branch);
+                    }
+                )) {
                 console.log("Branch is in protected branches [ " + protectedBranches.join(", ") + " ]");
                 status.text = "WARNING: branch is " + branch;
                 status.show();

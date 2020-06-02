@@ -26,11 +26,11 @@
   "main": "./out/extension",
   "contributes": {
     "commands": [
-			{
-				"command": "gitbranchwarn.debug",
-				"title": "Git Branch Warn: Debug"
-			}
-		],
+      {
+        "command": "gitbranchwarn.debug",
+        "title": "Git Branch Warn: Debug"
+      }
+    ],
     "configuration": [
       {
         "title": "Branch Warnings configuration",
@@ -42,7 +42,9 @@
           },
           "branchwarnings.protectedBranches": {
             "type": "array",
-            "default": ["master"],
+            "default": [
+              "master"
+            ],
             "description": "Array of names of protected branches to show warnings for."
           },
           "branchwarnings.msgColor": {
@@ -72,5 +74,7 @@
     "@types/node": "^7.0.43",
     "@types/mocha": "^2.2.42"
   },
-  "dependencies": {}
+  "dependencies": {
+    "glob-to-regexp": "^0.4.1"
+  }
 }
