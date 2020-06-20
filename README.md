@@ -14,6 +14,10 @@ This extension contributes the following settings:
 
 * `branchwarnings.msgColor`: Allows you to change the color of the message on the status bar.
 
+* `branchwarnings.warningText`: Allows you to change the warning status bar message prefix. The default message prefix value is "WARNING: branch is ".
+
+* `branchwarnings.warningPopup`: Allows you to change the warning popup message. The default message prefix value is "WARNING: you are on the protected branch ".
+
 By default, warnings will be given for branches titled "master". If you wish to warn when working on another branch such as "prerelease", add to your workspace or user settings:
 ```
 "branchwarnings.protectedBranches": [ "master", "prerelease", "releases/**" ]

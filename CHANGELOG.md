@@ -3,6 +3,12 @@ All notable changes to the "branch-warnings" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.8] - 2020-06-22
+### Changed
+- Updated readme
+### Added
+- Added support the following new extension settings "warningText" and "warningPopup" which allow users to customize the default warning messages. 
+
 ## [1.0.7] - 2020-06-02
 ### Changed
 - Updated readme
