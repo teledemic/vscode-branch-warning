@@ -61,7 +61,7 @@ function refresh(statusLocal:vscode.StatusBarItem, statusRemote:vscode.StatusBar
 }
 
 function updateConfigs() {
-    let config = vscode.workspace.getConfiguration("branchwarnings");
+    const config = vscode.workspace.getConfiguration("branchwarnings");
 
     protectedBranches = config.get<string[]>("protectedBranches");
     suppressPopup = config.get<boolean>("suppressPopup");
