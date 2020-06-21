@@ -148,7 +148,7 @@ async function checkRemoteBranches(status: vscode.StatusBarItem) {
             if (matches && matches.length >= 1) {
                 console.log("Remote branch found matching the regex for a release branch [ " + warnIfRegex + " ]");
                 console.log("Found regex match: " + JSON.stringify(matches));
-                let expandedMsg = warnIfMsg + matches.join(', ');
+                const expandedMsg = warnIfMsg + matches.join(', ');
                 status.text = expandedMsg;
                 status.tooltip = expandedMsg;
                 status.color = warnIfMsgColor;
