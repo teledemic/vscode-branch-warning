@@ -30,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
     
     // Install the debugger
     const gitPath = path.join(gitRootDir, ".git");
-    let disposable = vscode.commands.registerCommand('gitbranchwarn.debug', () => {
+    const disposable = vscode.commands.registerCommand('gitbranchwarn.debug', () => {
 		// Display a message box to the user
         vscode.window.showInformationMessage('Found a .git folder at: ' + gitPath);
 	});
