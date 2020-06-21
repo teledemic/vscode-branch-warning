@@ -66,6 +66,21 @@
             "type": "string",
             "default": "WARNING: you are on the protected branch ",
             "description": "Allows you to change the warning popup message."
+          },
+          "branchwarnings.warnIfRemoteBranchExistsMatchingRegex": {
+            "type": "string",
+            "default": "",
+            "description": "If set, will also provide a status warning if a branch matching the regex exists remotely."
+          },
+          "branchwarnings.warnIfRemoteBranchExistsMatchingMsg": {
+            "type": "string",
+            "default": "WARNING: A release branch exists ",
+            "description": "If warnIfRemoteBranchExistsMatchingRegex is set then this allows you to override the default message."
+          },
+          "branchwarnings.warnIfRemoteBranchExistsMatchingMsgColor": {
+            "type": "string",
+            "default": "#ffa500",
+            "description": "If warnIfRemoteBranchExistsMatchingRegex is set then this allows you to override the message color."
           }
         }
       }
@@ -86,6 +101,7 @@
     "@types/mocha": "^2.2.42"
   },
   "dependencies": {
-    "glob-to-regexp": "^0.4.1"
+    "glob-to-regexp": "^0.4.1",
+    "simple-git": "^2.9.0"
   }
 }

@@ -18,6 +18,12 @@ This extension contributes the following settings:
 
 * `branchwarnings.warningPopup`: Allows you to change the warning popup message. The default message prefix value is "WARNING: you are on the protected branch ".
 
+* `branchwarnings.warnIfRemoteBranchExistsMatchingRegex`: If set, will also provide a status warning if a branch matching the regex exists remotely. It can be used to encourage or remind users to consider if their change should go on a existing release branch, etc. If set also consider setting the "warnIfRemoteBranchExistsMatchingMsg" and "warnIfRemoteBranchExistsMatchingMsgColor" settings
+
+* `branchwarnings.warnIfRemoteBranchExistsMatchingMsg`: If "warnIfRemoteBranchExistsMatchingRegex" is set then this allows you to override the default message prefix which is "WARNING: A release branch exists ".
+
+* `branchwarnings.warnIfRemoteBranchExistsMatchingMsgColor`: If "warnIfRemoteBranchExistsMatchingRegex" is set then this allows you to override the message color which is "#ffa500". 
+
 By default, warnings will be given for branches titled "master". If you wish to warn when working on another branch such as "prerelease", add to your workspace or user settings:
 ```
 "branchwarnings.protectedBranches": [ "master", "prerelease", "releases/**" ]

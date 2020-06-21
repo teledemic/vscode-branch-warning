@@ -7,7 +7,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 - Updated readme
 ### Added
-- Added support the following new extension settings "warningText" and "warningPopup" which allow users to customize the default warning messages. 
+- Added support the following new extension settings "warningText" and "warningPopup" which allow users to customize the default warning messages.
+- Added support for additional warnings if a remote branch exists that matches a specific regex, specified by the new "warnIfRemoteBranchExistsMatchingRegex" setting. 
 
 ## [1.0.7] - 2020-06-02
 ### Changed

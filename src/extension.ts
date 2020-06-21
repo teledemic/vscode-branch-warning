@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as path from "path";
 import * as fs from "fs";
 import * as globToRegExp from "glob-to-regexp";
+import simpleGit, {SimpleGit} from 'simple-git';
 
 const GIT_IDENTIFIER = ".git/HEAD";
 const BRANCH_PREFIX = "ref: refs/heads/";
@@ -11,45 +12,68 @@ let suppressPopup = false;
 let lastBranch = "";
 let statusWarningText = "";
 let popupWarningText = "";
+let warningTooltip = "";
+let warningColor = "";
+let warnIfRegex = "";
+let warnIfMsg = "";
+let warnIfMsgColor = "";
+
+let gitRootDir;
 
 export function activate(context: vscode.ExtensionContext) {
-    const status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
+    // Construct the status display
+    const statusLocal = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
+    const statusRemote = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
     console.log("Extension branch-warnings initializing");
-    updateConfigs(status);
 
-    const gitpath = path.join(locateGitPath(vscode.workspace.rootPath), ".git");
-    const headpath = path.join(gitpath, "HEAD");
+    refresh(statusLocal, statusRemote);
     
-        // Install the debugger
+    // Install the debugger
+    const gitPath = path.join(gitRootDir, ".git");
     let disposable = vscode.commands.registerCommand('gitbranchwarn.debug', () => {
 		// Display a message box to the user
-        vscode.window.showInformationMessage('Found a .git folder at: ' + gitpath);
+        vscode.window.showInformationMessage('Found a .git folder at: ' + gitPath);
 	});
 	context.subscriptions.push(disposable);
 
-    
-    const pattern = new vscode.RelativePattern(gitpath, "HEAD");
+    // Register to watch for config or file system changes and update alerts.
+    const pattern = new vscode.RelativePattern(gitPath, "HEAD");
     const watcher = vscode.workspace.createFileSystemWatcher(pattern);
     watcher.onDidChange(e => {
         console.log(".git/HEAD change detected");
-        updateBranch(status, e.fsPath);
+        refresh(statusLocal, statusRemote);
+    });
+    vscode.workspace.onDidChangeWorkspaceFolders(e => {
+        console.log("Workspace folder change detected");
+        refresh(statusLocal, statusRemote);
     });
     vscode.workspace.onDidChangeConfiguration(e => {
         console.log("Configuration change detected");
-        updateConfigs(status);
-        updateBranch(status, headpath);
-    });
-    updateBranch(status, headpath);
+        refresh(statusLocal, statusRemote);
+    }); 
 }
 
-function updateConfigs(status:vscode.StatusBarItem) {
+function refresh(statusLocal:vscode.StatusBarItem, statusRemote:vscode.StatusBarItem) {
+    updateConfigs();
+    gitRootDir = locateGitPath(vscode.workspace.rootPath);
+    checkLocalBranch(statusLocal);
+    checkRemoteBranches(statusRemote)
+}
+
+function updateConfigs() {
     let config = vscode.workspace.getConfiguration("branchwarnings");
+
     protectedBranches = config.get<string[]>("protectedBranches");
     suppressPopup = config.get<boolean>("suppressPopup");
+    
     statusWarningText = config.get<string>("warningText");
     popupWarningText = config.get<string>("warningPopup");
-    status.color = config.get<string>("msgColor");
-    status.tooltip = config.get<string>("msgTooltip");
+    warningColor = config.get<string>("msgColor");
+    warningTooltip = config.get<string>("msgTooltip");
+
+    warnIfRegex = config.get<string>("warnIfRemoteBranchExistsMatchingRegex");
+    warnIfMsg = config.get<string>("warnIfRemoteBranchExistsMatchingMsg");
+    warnIfMsgColor = config.get<string>("warnIfRemoteBranchExistsMatchingMsgColor");
 }
 
 function locateGitPath(startPath:string): string {
@@ -63,17 +87,20 @@ function locateGitPath(startPath:string): string {
 }
 
 function isValidGitPath(directory:string): boolean {
-    const headpath = path.join(directory, GIT_IDENTIFIER);
-    let isGitRoot = fs.existsSync(headpath);
+    const headPath = path.join(directory, GIT_IDENTIFIER);
+    let isGitRoot = fs.existsSync(headPath);
     if (!isGitRoot) {
-        console.log('Did not find .git folder in: ' + headpath);
+        console.log('Did not find .git folder in: ' + headPath);
     }
     return isGitRoot;
 }
 
+function checkLocalBranch(status: vscode.StatusBarItem): void {
+    const gitPath = path.join(gitRootDir, ".git");
+    const headPath = path.join(gitPath, "HEAD");
 
-function updateBranch(status: vscode.StatusBarItem, path: string): void {
-    fs.readFile(path, "utf-8", (err, data) => {
+    // Case 1: You're on a branch thats protected
+    fs.readFile(headPath, "utf-8", (err, data) => {
         if (!err) {
             // Parse out the branch name, since we now need to consider the entire 
             // branch path/name like "feature/xyz"
@@ -89,21 +116,54 @@ function updateBranch(status: vscode.StatusBarItem, path: string): void {
                 )) {
                 console.log("Branch is in protected branches [ " + protectedBranches.join(", ") + " ]");
                 status.text = statusWarningText + branch;
+                status.tooltip = warningTooltip;
+                status.color = warningColor;
                 status.show();
                 if (lastBranch != branch && !suppressPopup) {
-                    console.log("Branch is a change, showing info");
+                    console.log("Branch has changed, showing info");
                     vscode.window.showWarningMessage(popupWarningText + branch);
                 }
             } else {
-                console.log("Branch is not in protected branches [ " + protectedBranches.join(", ") + " ]");
+                console.log("Branch is not in protected branches [ " + protectedBranches.join(", ") + " ].");
                 status.hide();
             }
             lastBranch = branch;
         } else {
             console.log("Error getting git branch");
             console.log(err);
+            status.hide();
         }
     });
+}
+
+async function checkRemoteBranches(status: vscode.StatusBarItem) {
+
+    // start git client using root and determine if it contains the regex
+    const git2: SimpleGit = simpleGit(gitRootDir);
+    try {
+        let result = await git2.listRemote(['--heads']);
+        if (result && warnIfMsg && warnIfMsg != "") {
+            console.log("Raw GIT results: " + JSON.stringify(result));
+            let matches = result.match(warnIfRegex);
+            if (matches && matches.length >= 1) {
+                console.log("Remote branch found matching the regex for a release branch [ " + warnIfRegex + " ]");
+                console.log("Found regex match: " + JSON.stringify(matches));
+                let expandedMsg = warnIfMsg + matches.join(', ');
+                status.text = expandedMsg;
+                status.tooltip = expandedMsg;
+                status.color = warnIfMsgColor;
+                status.show();
+                vscode.window.showWarningMessage(warnIfMsg);
+            }
+        } else {
+            console.log('Remote URL -- no match.');
+            status.hide();
+        }
+    } catch(err) {
+        console.log("Error when getting git remotes in dir: " + gitRootDir 
+            + ", error: " + JSON.stringify(err));
+        status.hide();
+    }
 }
 
 export function deactivate() {
