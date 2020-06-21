@@ -88,7 +88,7 @@ function locateGitPath(startPath:string): string {
 
 function isValidGitPath(directory:string): boolean {
     const headPath = path.join(directory, GIT_IDENTIFIER);
-    let isGitRoot = fs.existsSync(headPath);
+    const isGitRoot = fs.existsSync(headPath);
     if (!isGitRoot) {
         console.log('Did not find .git folder in: ' + headPath);
     }
