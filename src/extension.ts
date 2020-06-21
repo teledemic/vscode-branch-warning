@@ -141,7 +141,7 @@ async function checkRemoteBranches(status: vscode.StatusBarItem) {
     // start git client using root and determine if it contains the regex
     const git2: SimpleGit = simpleGit(gitRootDir);
     try {
-        let result = await git2.listRemote(['--heads']);
+        const result = await git2.listRemote(['--heads']);
         if (result && warnIfMsg && warnIfMsg != "") {
             console.log("Raw GIT results: " + JSON.stringify(result));
             let matches = result.match(warnIfRegex);
