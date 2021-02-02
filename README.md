@@ -12,8 +12,6 @@ This extension contributes the following settings:
 
 * `branchwarnings.protectedBranches`: An array of branch names. If it exists, warnings will be shown for these names.
 
-* `branchwarnings.msgColor`: Allows you to change the color of the message on the status bar.
-
 By default, warnings will be given for branches titled "master". If you wish to warn when working on another branch such as "prerelease", add to your workspace or user settings:
 ```
 "branchwarnings.protectedBranches": [ "master", "prerelease", "releases/**" ]
