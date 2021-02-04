@@ -5,7 +5,7 @@
 ## Updating PAT if needed
 - Go to https://dev.azure.com/teledemic
 - Follow instructions at https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
-- `vsce login Teledemic`
+- `vsce login teledemic` (case sensitive)
 - Paste PAT
 
 ## Publishing
