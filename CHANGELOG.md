@@ -3,6 +3,11 @@ All notable changes to the "branch-warnings" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.8] - 2021-02-04
+### Changed
+- Status bar background color for the warning is now determined by the theme
+- msgColor option is removed because it is obsolete with the above change
+
 ## [1.0.7] - 2020-06-02
 ### Changed
 - Updated readme
