@@ -23,10 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
     
         // Install the debugger
     let disposable = vscode.commands.registerCommand('gitbranchwarn.debug', () => {
-		// Display a message box to the user
+        // Display a message box to the user
         vscode.window.showInformationMessage('Found a .git folder at: ' + gitpath);
-	});
-	context.subscriptions.push(disposable);
+    });
+    context.subscriptions.push(disposable);
 
     
     const pattern = new vscode.RelativePattern(gitpath, "HEAD");
@@ -47,7 +47,8 @@ function updateConfigs(status:vscode.StatusBarItem) {
     let config = vscode.workspace.getConfiguration("branchwarnings");
     protectedBranches = config.get<string[]>("protectedBranches");
     suppressPopup = config.get<boolean>("suppressPopup");
-    status.color = config.get<string>("msgColor");
+    status.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
+    status.command = "git.checkout";
     status.tooltip = config.get<string>("msgTooltip");
 }
 
