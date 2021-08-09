@@ -1,7 +1,7 @@
 {
   "name": "branch-warnings",
   "displayName": "Git Branch Warnings",
-  "description": "Warn when you're on the wrong Git branch, like MASTER",
+  "description": "Warn when you're on the wrong Git branch, like MAIN",
   "version": "1.0.8",
   "publisher": "teledemic",
   "repository": {
@@ -44,7 +44,7 @@
           "branchwarnings.protectedBranches": {
             "type": "array",
             "default": [
-              "master"
+              "main"
             ],
             "description": "Array of names of protected branches to show warnings for."
           },

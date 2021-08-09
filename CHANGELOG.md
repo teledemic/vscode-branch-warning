@@ -3,6 +3,10 @@ All notable changes to the "branch-warnings" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.9] - 2021-08-08
+### Changed
+- Changed the default property "master" to "main" as the default protected branch.
+
 ## [1.0.8] - 2021-02-04
 ### Changed
 - Status bar background color for the warning is now determined by the theme
