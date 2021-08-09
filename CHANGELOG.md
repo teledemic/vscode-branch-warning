@@ -3,9 +3,9 @@ All notable changes to the "branch-warnings" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [1.0.9] - 2021-08-08
+## [1.0.9] - 2021-08-09
 ### Changed
-- Changed the default property "master" to "main" as the default protected branch.
+- Added "main" in addition to "master" as default protected branches.
 
 ## [1.0.8] - 2021-02-04
 ### Changed
