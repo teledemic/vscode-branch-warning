@@ -3,6 +3,10 @@ All notable changes to the "branch-warnings" extension will be documented in thi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.10] - 2021-11-30
+### Changed
+- Filewatcher now responds to both "add" and "change" events, may fix an issue with newer versions of VSCode.
+
 ## [1.0.9] - 2021-08-09
 ### Changed
 - Added "main" in addition to "master" as default protected branches.
