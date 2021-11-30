@@ -30,7 +30,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     
     const pattern = new vscode.RelativePattern(gitpath, "HEAD");
-    const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+    const watcher = vscode.workspace.createFileSystemWatcher(pattern, false, false);
+    watcher.onDidCreate(e => {  // workaround for https://github.com/microsoft/vscode/issues/136460
+        console.log(".git/HEAD create detected");
+        updateBranch(status, e.fsPath);
+    });
     watcher.onDidChange(e => {
         console.log(".git/HEAD change detected");
         updateBranch(status, e.fsPath);
